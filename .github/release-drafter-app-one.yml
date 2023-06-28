@@ -1,0 +1,6 @@
+_extends: github-release-app:.github/release-drafter.yml
+name-template: 'app-one-v$RESOLVED_VERSION'
+tag-template: 'app-one-v$RESOLVED_VERSION'
+tag-prefix: app-one-v
+include-paths:
+  - "app_one/lib/"
