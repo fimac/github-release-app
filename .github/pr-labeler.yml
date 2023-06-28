@@ -1,3 +1,5 @@
 feature: ['feature/*', 'feat/*']
 bug: [fix/*, bug/*]
 chore: chore/*
+minor: '*/min'
+major: '*/maj'
