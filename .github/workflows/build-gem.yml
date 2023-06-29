@@ -8,18 +8,20 @@ on:
       - main
   workflow_call:
     outputs:
-      gem-name:
-        value: ${{ jobs.build.outputs.gem-name-output }}
+      app-one-gem-name:
+        value: ${{ jobs.build-app-one.outputs.app-one-gem-name-output }}
+      app-two-gem-name:
+        value: ${{ jobs.build-app-two.outputs.app-two-gem-name-output }}
 
 defaults:
   run:
     shell: bash -l {0}
 
 jobs:
-  build:
+  build-app-one:
     runs-on: ubuntu-latest
     outputs:
-      gem-name-output: ${{ steps.build-ruby-gem.outputs.GEM_NAME }}
+      app-one-gem-name-output: ${{ steps.build-app-one-gem.outputs.GEM_NAME }}
 
     steps:
       - name: Checkout code
@@ -34,13 +36,43 @@ jobs:
       - run: bundle install
       - name: Run Specs
         run: bundle exec rspec
-      - name: Build Gem
-        id: build-ruby-gem
+      - name: Build AppOne Gem
+        id: build-app-one-gem
         run: |
-          gem build toy-ore.gemspec
-          echo "::set-output name=GEM_NAME::$(basename toy-ore-*.gem)"
+          gem build app_one.gemspec
+          echo "::set-output name=GEM_NAME::$(basename app-one-*.gem)"
       - name: Upload Gem Artifact
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ steps.build-ruby-gem.outputs.GEM_NAME }}
-          path: toy-ore-*.gem
+          name: ${{ steps.build-app-one-gem.outputs.GEM_NAME }}
+          path: app-one-*.gem
+  build-app-two:
+    runs-on: ubuntu-latest
+    outputs:
+      app-two-gem-name-output: ${{ steps.build-app-two-gem.outputs.GEM_NAME }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.2
+      - name: Install dependencies
+        run: gem install bundler
+      - run: bundle install
+      - name: Run Specs
+        run: bundle exec rspec
+      - name: Build AppTwo Gem
+        id: build-app-two-gem
+        # check that we can access the resolved version here
+        run: |
+          gem build app_one.gemspec
+          echo "::set-output name=GEM_NAME::$(basename app-two-*.gem)"
+          echo $RESOLVED_VERSION
+      - name: Upload Gem Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ steps.build-app-two-gem.outputs.GEM_NAME }}
+          path: app-two-*.gem
