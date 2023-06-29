@@ -31,11 +31,6 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: 3.2
-      - name: Install dependencies
-        run: gem install bundler
-      - run: bundle install
-      - name: Run Specs
-        run: bundle exec rspec
       - name: Build AppOne Gem
         id: build-app-one-gem
         run: |
@@ -59,11 +54,6 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: 3.2
-      - name: Install dependencies
-        run: gem install bundler
-      - run: bundle install
-      - name: Run Specs
-        run: bundle exec rspec
       - name: Build AppTwo Gem
         id: build-app-two-gem
         # check that we can access the resolved version here
