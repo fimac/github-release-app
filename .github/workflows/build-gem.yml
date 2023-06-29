@@ -31,7 +31,6 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: 3.2
-
       - name: Get latest release
         id: latest_release
         run: |
@@ -40,16 +39,20 @@ jobs:
           APP_ONE_TAG=$(curl -sSL -H "Authorization: token $TOKEN" "$API_URL" | jq -r '.[] | select(.name | test("app-one")) | .tag_name')
           APP_TWO_TAG=$(curl -sSL -H "Authorization: token $TOKEN" "$API_URL" | jq -r '.[] | select(.name | test("app-two")) | .tag_name')
           echo "Latest release tag for App1: $APP_ONE_TAG"
-          export APP_ONE_VERSION=$(echo $APP_ONE_TAG | grep -o '[0-9]\+\.[0-9]\+\.[0-9]\+')
-          echo $APP_ONE_VERSION
+          APP_ONE_VERSION=$(echo $APP_ONE_TAG | grep -o '[0-9]\+\.[0-9]\+\.[0-9]\+')
+          echo app_one_version="$APP_ONE_VERSION" >> "$GITHUB_ENV"
           echo "Latest release tag for App2: $APP_TWO_TAG"
           export APP_TWO_VERSION=$(echo $APP_TWO_TAG | grep -o '[0-9]\+\.[0-9]\+\.[0-9]\+')
-          echo $APP_TWO_VERSION
+          echo app_two_version="$APP_TWO_VERSION" >> "$GITHUB_ENV"
+        env:
+          APP_ONE_VERSION: $APP_ONE_VERSION
+          APP_TWO_VERSION: $APP_TWO_VERSION
       - name: Build AppOne Gem
         id: build-app-one-gem
         run: |
+          export APP_ONE_VERSION=${{env.app_one_version}}
           gem build app_one.gemspec
-          echo "::set-output name=GEM_NAME::$(basename app-one-*.gem)"
+          echo "::set-output name=GEM_NAME::$(basename app-one-${{env.app_one_version}}.gem)"
         working-directory: ./app_one
       - name: Upload Gem Artifact
         uses: actions/upload-artifact@v2
@@ -73,8 +76,9 @@ jobs:
         id: build-app-two-gem
         # check that we can access the resolved version here
         run: |
+          export APP_TWO_VERSION=${{env.app_two_version}}
           gem build app_one.gemspec
-          echo "::set-output name=GEM_NAME::$(basename app-two-*.gem)"
+          echo "::set-output name=GEM_NAME::$(basename app-two-${{env.app_two_version}}.gem)"
           echo $RESOLVED_VERSION
         working-directory: ./app_two
       - name: Upload Gem Artifact
