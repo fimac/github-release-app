@@ -40,7 +40,11 @@ jobs:
           APP_ONE_TAG=$(curl -sSL -H "Authorization: token $TOKEN" "$API_URL" | jq -r '.[] | select(.name | test("app-one")) | .tag_name')
           APP_TWO_TAG=$(curl -sSL -H "Authorization: token $TOKEN" "$API_URL" | jq -r '.[] | select(.name | test("app-two")) | .tag_name')
           echo "Latest release tag for App1: $APP_ONE_TAG"
+          export APP_ONE_VERSION=$(echo $APP_ONE_TAG | grep -o '[0-9]\+\.[0-9]\+\.[0-9]\+')
+          echo $APP_ONE_VERSION
           echo "Latest release tag for App2: $APP_TWO_TAG"
+          export APP_TWO_VERSION=$(echo $APP_TWO_TAG | grep -o '[0-9]\+\.[0-9]\+\.[0-9]\+')
+          echo $APP_TWO_VERSION
       - name: Build AppOne Gem
         id: build-app-one-gem
         run: |
