@@ -37,9 +37,9 @@ jobs:
         run: |
           TOKEN="${{ secrets.GITHUB_TOKEN }}"  # Replace with your personal access token secret name
           API_URL="https://api.github.com/repos/${{ github.repository }}/releases"
-          TAG=$(curl -sSL -H "Authorization: token $TOKEN" "$API_URL" | jq -r '.[] | select(.name == "app-one") | .tag_name')
+          PATTERN="s/app-one-v\([0-9.]*\)/\1/p"
+          TAG=$(curl -sSL -H "Authorization: token $TOKEN" "$API_URL" | jq -r '.[] | select(.name | test("$PATTERN")) | .tag_name')
           echo "Latest release tag for App1: $TAG"
-
       - name: Build AppOne Gem
         id: build-app-one-gem
         run: |
