@@ -31,6 +31,23 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: 3.2
+      - name: Create release
+        id: create_release
+        uses: release-drafter/release-drafter@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract app_one RESOLVED_VERSION
+        run: |
+          export APP_ONE_GEM_VERSION=$(echo "${{ steps.create_release.outputs.release_name }}" | sed -n 's/app-one-v\([0-9.]*\)/\1/p')
+          echo "!!!!"
+          echo "$RESOLVED_VERSION"
+          echo $APP_ONE_GEM_VERSION
+      - name: Extract app_two RESOLVED_VERSION
+        run: |
+          export APP_TWO_GEM_VERSION=$(echo "${{ steps.create_release.outputs.release_name }}" | sed -n 's/app-two-v\([0-9.]*\)/\1/p')
+          echo "env var======"
+          echo $APP_TWO_GEM_VERSION
       - name: Build AppOne Gem
         id: build-app-one-gem
         run: |

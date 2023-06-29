@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = "app-one"
-  s.version     = "0.0.0"
+  s.version     = ENV["APP_ONE_GEM_VERSION"]
   s.summary     = "Hola!"
   s.description = "A simple hello world gem"
   s.authors     = ["Fiona McCawley"]
