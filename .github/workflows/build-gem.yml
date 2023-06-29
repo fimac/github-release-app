@@ -36,6 +36,7 @@ jobs:
         run: |
           gem build app_one.gemspec
           echo "::set-output name=GEM_NAME::$(basename app-one-*.gem)"
+        working-directory: ./app_one
       - name: Upload Gem Artifact
         uses: actions/upload-artifact@v2
         with:
@@ -61,6 +62,7 @@ jobs:
           gem build app_one.gemspec
           echo "::set-output name=GEM_NAME::$(basename app-two-*.gem)"
           echo $RESOLVED_VERSION
+        working-directory: ./app_two
       - name: Upload Gem Artifact
         uses: actions/upload-artifact@v2
         with:
