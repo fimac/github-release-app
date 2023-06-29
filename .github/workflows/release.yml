@@ -32,16 +32,43 @@ jobs:
         if: ${{ steps.set-project-from-tag.outputs.module == 'app-one' }}
         needs: build-and-test-ruby-gems
         run: echo ${{ needs.build-and-test-ruby-gems.outputs.app-one-gem-name }}
+      - name: Download artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ needs.build-and-test-ruby-gems.outputs.app-one-gem-name }}
+          path: ./app_one
+      - name: Publish gem
+        run: |
+          echo ".....pushing gem"
+          echo ${{ needs.build-and-test-ruby-gems.outputs.app-one-gem-name }}
+        working-directory: ./app_one
+
+      - name: 'Publish artifacts [app-two]'
+        if: ${{ steps.set-project-from-tag.outputs.module == 'app-two' }}
+        needs: build-and-test-ruby-gems
+        run: echo ${{ needs.build-and-test-ruby-gems.outputs.app-two-gem-name }}
+      - name: Download artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ needs.build-and-test-ruby-gems.outputs.app-two-gem-name }}
+          path: ./app_two
+      - name: Publish gem
+        run: |
+          echo ".....pushing gem"
+          echo ${{ needs.build-and-test-ruby-gems.outputs.app-two-gem-name }}
+        working-directory: ./app_two
+
+
         # steps:
         #   - run: echo ${{ needs.build-and-test-ruby-gems.outputs.app-one-gem-name }}
-        #   - name: Download artifact
-        #     uses: actions/download-artifact@v3
-        #     with:
-        #       name: ${{ needs.build-and-test-ruby-gems.outputs.app-one-gem-name }}
-        #   - name: Publish gem
-        #     run: |
-        #       echo ".....pushing gem"
-        #       echo ${{ needs.build-and-test-ruby-gems.outputs.app-one-gem-name }}
+          # - name: Download artifact
+          #   uses: actions/download-artifact@v3
+          #   with:
+          #     name: ${{ needs.build-and-test-ruby-gems.outputs.app-one-gem-name }}
+          # - name: Publish gem
+          #   run: |
+          #     echo ".....pushing gem"
+          #     echo ${{ needs.build-and-test-ruby-gems.outputs.app-one-gem-name }}
       # - name: 'Publish artifacts [app-two]'
       #   if: ${{ steps.set-project-from-tag.outputs.module == 'app-two' }}
       #   needs: build-and-test-ruby-gems
