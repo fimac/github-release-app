@@ -41,8 +41,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: ${{ steps.build-app-one-gem.outputs.GEM_NAME }}
-          path: app-one-*.gem
-        working-directory: ./app_one
+          path: ./app_one/app-one-*.gem
   build-app-two:
     runs-on: ubuntu-latest
     outputs:
@@ -68,5 +67,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: ${{ steps.build-app-two-gem.outputs.GEM_NAME }}
-          path: app-two-*.gem
-        working-directory: ./app_two
+          path: ./app_two/app-two-*.gem
