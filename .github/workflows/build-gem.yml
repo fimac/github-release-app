@@ -42,6 +42,7 @@ jobs:
         with:
           name: ${{ steps.build-app-one-gem.outputs.GEM_NAME }}
           path: app-one-*.gem
+        working-directory: ./app_one
   build-app-two:
     runs-on: ubuntu-latest
     outputs:
@@ -68,3 +69,4 @@ jobs:
         with:
           name: ${{ steps.build-app-two-gem.outputs.GEM_NAME }}
           path: app-two-*.gem
+        working-directory: ./app_two
