@@ -31,18 +31,14 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: 3.2
-      - name: Create release
-        id: create_release
-        uses: release-drafter/release-drafter@v5
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Extract app_one RESOLVED_VERSION
+      - name: Get latest release
+        id: latest_release
         run: |
-          echo "!!!!"
-          echo "${{ steps.create_release.outputs.release_name }}"
-          echo "$RESOLVED_VERSION"
-          echo $APP_ONE_GEM_VERSION
+          TOKEN="${{ secrets.GITHUB_TOKEN }}"  # Replace with your personal access token secret name
+          API_URL="https://api.github.com/repos/${{ github.repository }}/releases/latest"
+          TAG=$(curl -sSL -H "Authorization: token $TOKEN" "$API_URL" | jq -r '.tag_name')
+          echo "Latest release tag: $TAG"
 
       - name: Build AppOne Gem
         id: build-app-one-gem
