@@ -6,4 +6,4 @@ include-paths:
   - "app_one/lib/"
 version-resolver:
   default: major
-version-template: 1.0.0.beta.$MAJOR
+version-template: $MAJOR
