@@ -4,3 +4,14 @@ tag-template: 'app-two-v$RESOLVED_VERSION'
 tag-prefix: app-two-v
 include-paths:
   - "app_two/lib/"
+version-resolver:
+  major:
+    labels:
+      - 'major'
+  minor:
+    labels:
+      - 'minor'
+  patch:
+    labels:
+      - 'patch'
+  default: patch
