@@ -1,9 +1,9 @@
 _extends: github-release-app:.github/release-drafter.yml
-name-template: 'app-one-v1.0.0.beta.$NEXT_PATCH_VERSION'
-tag-template: 'app-one-v1.0.0.beta.$NEXT_PATCH_VERSION'
+name-template: 'app-one-v1.0.0.beta.$NEXT_MAJOR_VERSION'
+tag-template: 'app-one-v1.0.0.beta.$NEXT_MAJOR_VERSION'
 tag-prefix: app-one-v1.0.0.beta.
 include-paths:
   - "app_one/lib/"
 version-resolver:
-  default: patch
-version-template: $PATCH
+  default: major
+version-template: 1.0.0.beta.$MAJOR
