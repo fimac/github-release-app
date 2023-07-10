@@ -35,9 +35,9 @@ jobs:
         id: latest_release
         run: |
           TOKEN="${{ secrets.GITHUB_TOKEN }}"  # Replace with your personal access token secret name
-          API_URL="https://api.github.com/repos/${{ github.repository }}/releases"
-          APP_ONE_TAG=$(curl -sSL -H "Authorization: token $TOKEN" "$API_URL" | jq -r '.[] | select(.name | test("app-one")) | select(.draft == true) | .tag_name')
-          APP_TWO_TAG=$(curl -sSL -H "Authorization: token $TOKEN" "$API_URL" | jq -r '.[] | select(.name | test("app-two")) | select(.draft == true) | .tag_name')
+          API_URL="https://api.github.com/repos/${{ github.repository }}/releases/"
+          APP_ONE_TAG=$(curl -sSL -H "Authorization: token $TOKEN" "$API_URL" | jq -r '[.[] | select(.draft == false) | select(.name | contains("app-one"))] | first | .tag_name')
+          APP_TWO_TAG=$(curl -sSL -H "Authorization: token $TOKEN" "$API_URL" | jq -r '[.[] | select(.draft == false) | select(.name | contains("app-two"))] | first | .tag_name')
           echo "Latest release tag for App1: $APP_ONE_TAG"
           APP_ONE_VERSION=$(echo $APP_ONE_TAG | grep -o '[0-9]\+\.[0-9]\+\.[0-9]\+')
           echo app_one_version="$APP_ONE_VERSION" >> "$GITHUB_ENV"
