@@ -1,6 +1,6 @@
 class AppOne
   def self.hi
     puts "Hello AppOne!"
-    puts "Making an asdfupdate!!!!!!"
+    puts "Making an sssdfupdate!!!!!!"
   end
 end
