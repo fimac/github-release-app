@@ -34,10 +34,16 @@ jobs:
       - name: Get latest release
         id: latest_release
         run: |
-          TOKEN="${{ secrets.GITHUB_TOKEN }}"  # Replace with your personal access token secret name
-          API_URL="https://api.github.com/repos/${{ github.repository }}/releases/"
-          APP_ONE_TAG=$(curl -sSL -H "Authorization: token $TOKEN" "$API_URL" | jq -r '[.[] | select(.draft == false) | select(.name | contains("app-one"))] | first | .tag_name')
-          APP_TWO_TAG=$(curl -sSL -H "Authorization: token $TOKEN" "$API_URL" | jq -r '[.[] | select(.draft == false) | select(.name | contains("app-two"))] | first | .tag_name')
+          response=$(curl -sSL -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+          "https://api.github.com/repos/${{ github.repository }}/releases")
+          latest_release=$(echo "$response" | jq -r 'sort_by(.published_at) | reverse | .[] | select(.draft == false) | select(.name | contains("app-one"))| .tag_name' | head -1)
+          echo "Latest non-draft release is: $latest_release"
+
+          TOKEN="${{ secrets.GITHUB_TOKEN }}"
+          API_URL="https://api.github.com/repos/${{ github.repository }}/releases"
+          APP_ONE_TAG=$(curl -sSL -H "Authorization: token $TOKEN" "$API_URL" | jq -r 'sort_by(.published_at) | reverse | .[] | select(.draft == false) | select(.name | contains("app-one"))| .tag_name' | head -1)
+
+          APP_TWO_TAG=$(curl -sSL -H "Authorization: token $TOKEN" "$API_URL" | jq -r 'sort_by(.published_at) | reverse | .[] | select(.draft == false) | select(.name | contains("app-two"))| .tag_name' | head -1)
           echo "Latest release tag for App1: $APP_ONE_TAG"
           APP_ONE_VERSION=$(echo $APP_ONE_TAG | grep -o '[0-9]\+\.[0-9]\+\.[0-9]\+')
           echo app_one_version="$APP_ONE_VERSION" >> "$GITHUB_ENV"
